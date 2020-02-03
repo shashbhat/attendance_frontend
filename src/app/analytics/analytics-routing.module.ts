@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AnalyticsComponent } from './analytics.component';
-import { Statement5Component } from './statement5/statement5.component';
+import { Statement5Component } from './statement2/statement2.component';
 
 
 const routes: Routes = [
@@ -15,7 +15,7 @@ const routes: Routes = [
     component:AnalyticsComponent,
     children:[
       {
-        path:'statement5',
+        path:'statement2',
         component:Statement5Component
       }
     ]
