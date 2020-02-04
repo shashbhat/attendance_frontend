@@ -14,6 +14,7 @@ import { TokenInterceptor } from './auth/auth.interceptor';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { TokenInterceptor } from './auth/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+   
 
     
   ],

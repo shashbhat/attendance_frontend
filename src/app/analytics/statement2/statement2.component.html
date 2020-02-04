@@ -9,7 +9,7 @@
         <div class="col-md-3">
             <select class="form-control">
                 <option value = "">-- Select Semester --</option>
-                <option *ngFor = "let term of termDetails">{{term}}</option>
+                <option *ngFor = "let term of termDetails">Semester {{term}}</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -18,3 +18,8 @@
               </button>
         </div>
     </div>
+    <div class="row">
+
+        <google-chart [data]="columnChart"></google-chart>
+    </div>
+</div>
