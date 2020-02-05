@@ -15,7 +15,13 @@ export class Statement5Component implements OnInit {
   
   academicYear:string[] = [];
   term:string[] = [];
-  usn:string[] = [];
+  usn:any;
+  email:any;
+  user:any;
+
+
+  selectedYear;
+  selectedTerm;
 
   termDetails=[]
   studentAttendanceDetails = []
@@ -26,14 +32,35 @@ export class Statement5Component implements OnInit {
   ngOnInit() {
     this.get_academic_year()
     this.get_term_details()
-    this.get_student_attendance_details("4MT15IS002","6","2017-18")
-    this.get_student_UEmarks_details("4MT15IS002","6","2017-18")
+
+    this.email = localStorage.getItem("user")
+    this.user = JSON.parse(this.email)
+    
+    
+    // this.showColumnChart()
+  }
+
+  get_student_details(){
+    console.log('hello')
+    this.get_student_attendance_details("4MT15IS002",this.selectedTerm,this.selectedYear)
+    this.get_student_UEmarks_details("4MT15IS002",this.selectedTerm,this.selectedYear)
+
+    setTimeout(()=>{
+      this.showColumnChart()
+    }, 5000)
+  
+   
+  }
+
+  get_student_usn_by_email(email){
+    this.analyticsService.get_usn_by_email(email).subscribe(res=>{
+      this.usn = res["usn"]
+    })
   }
 
   get_academic_year(){
     this.analyticsService.get_academic_year().subscribe(res=>{
       this.academicYear = res["res"]
-      console.log(this.academicYear)
     })
   }
 
@@ -47,34 +74,50 @@ export class Statement5Component implements OnInit {
   get_student_attendance_details(usn, term, academicYear){
     this.analyticsService.get_student_attendance_details(usn, term, academicYear).subscribe(res=>{
       this.studentAttendanceDetails = res["res"]
-      let details = res["res"]
-      console.log(this.studentAttendanceDetails)
-
-    let data = []
-    data.push(["CourseName","Percentage"]);
-    for(let s of details){
-      data.push([s["courseName"],s['perc']])
-    }
-    this.showStudentDetailsChart(data)
-    console.log(data)
-
+  
     })
   }
-
 
   get_student_UEmarks_details(usn, term, academicYear){
     this.analyticsService.get_student_UEmarks_details(usn, term, academicYear).subscribe(res=>{
       this.studentUEmarks = res["res"]
-      console.log(this.studentUEmarks)
-    
     })
   }
+
+
+  showColumnChart(){
+    let data = []
+
+    data.push(["CourseName","Attendance","Marks"]);
+    
+    setTimeout( ()=>{ 
+      for(let s of this.studentAttendanceDetails ){
+       
+        data.push([s["courseName"],s['perc']])
+    }
+    let i =1
+    for(let s of this.studentUEmarks){
+
+        data[i][2] = s['perc']
+        i++;
+      } 
+      
+    this.showStudentDetailsChart(data)
+    console.log(data)
+
+    }, 5000 )
+  }
+
 
   showStudentDetailsChart(data){
     
     this.columnChart = {
       chartType: 'ColumnChart',
-      dataTable: data
+      dataTable: data,
+      options:{
+        'width': 1300,
+        'height': 1000
+      }
     };
   }
 

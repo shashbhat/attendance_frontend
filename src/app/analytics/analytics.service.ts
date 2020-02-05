@@ -34,4 +34,9 @@ export class AnalyticsService {
     let url = `${this.baseUrl}studentUEmarksDetails/${usn}/${term}/${academicYear}`
     return this.http.get<any>(url)
   }
+
+  get_usn_by_email(email):Observable<any>{
+    let url = `${this.baseUrl}studentUSNlogin/${email}`
+    return this.http.get<any>(url)
+  }
 }
