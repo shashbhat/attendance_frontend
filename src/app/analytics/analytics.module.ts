@@ -8,6 +8,8 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { FormsModule } from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { NgxSpinnerModule } from "ngx-spinner";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [AnalyticsComponent, Statement2Component],
@@ -17,7 +19,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     Ng2GoogleChartsModule,
     FormsModule,
     MatDialogModule,
-    MatFormFieldModule     
+    MatFormFieldModule,
+    NgxSpinnerModule    ,
+    MatProgressSpinnerModule 
   ]
 })
 export class AnalyticsModule { }

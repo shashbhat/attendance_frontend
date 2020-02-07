@@ -16,18 +16,23 @@
       <span class="glyphicon glyphicon-search"></span> Search
     </button>
   </div>
-
+</div>
   <div class="row">
 
+  <!-- Spinner -->
+    <mat-spinner class="spinner" *ngIf = "showSpinner === true"></mat-spinner>
+
+
     <div class="col-md-8">
+
       <div *ngIf="columnChart">
+
         <google-chart [data]="columnChart" (chartSelect)="onChartSelect($event)" data-toggle="modal"
           data-target="#exampleModal"></google-chart>
+
       </div>
     </div>
   </div>
-
-
 
 
   <!-- Modal -->

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../analytics.service';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChartSelectEvent } from 'ng2-google-charts';
 
 @Component({
@@ -35,12 +34,12 @@ export class Statement2Component implements OnInit {
   present;
   total;
   charts: boolean = false;
-
   showSpinner = false;
+  
   selectedYear;
   selectedTerm;
 
-  constructor(private analyticsService: AnalyticsService, private authService: AuthService, public dialog: MatDialog) { }
+  constructor(private analyticsService: AnalyticsService, private authService: AuthService) { }
 
   ngOnInit() {
 
@@ -52,11 +51,13 @@ export class Statement2Component implements OnInit {
   }
 
   get_student_details() {
+    
     this.showSpinner = true;
+  
     if (!this.charts) {
       setTimeout(() => {
         this.showColumnChart()
-      }, 1000)
+      }, 2000)
     }
     this.get_student_attendance_details(this.usn[0]["usn"], this.selectedTerm, this.selectedYear)
     this.get_student_UEmarks_details(this.usn[0]["usn"], this.selectedTerm, this.selectedYear)
@@ -108,19 +109,21 @@ export class Statement2Component implements OnInit {
 
 
   showColumnChart() {
-    this.showSpinner = false;
+    
     let data = []
     this.charts = true;
     data.push(["CourseName", "Attendance", "Marks"]);
 
     setTimeout(() => {
+      this.showSpinner = false
+    
       for (let s of this.studentAttendanceDetails) {
 
         data.push([s["courseName"], s['perc']])
       }
       let i = 1
       for (let s of this.studentUEmarks) {
-
+   
         data[i][2] = s['perc']
         i++;
       }
@@ -128,7 +131,7 @@ export class Statement2Component implements OnInit {
       this.showStudentDetailsChart(data)
 
 
-    }, 1000)
+    }, 3000)
   }
 
   onChartSelect(event: ChartSelectEvent) {
@@ -141,11 +144,9 @@ export class Statement2Component implements OnInit {
       console.log(this.courseAttendance)
       this.present = this.courseAttendance["present"]
       this.total = this.courseAttendance["total"]
-    }, 1000)
+    }, 2000)
 
   }
-
-
 
   showStudentDetailsChart(data) {
     this.chartTitle = 'Course-wise Attendance %',
@@ -159,6 +160,7 @@ export class Statement2Component implements OnInit {
           },
 
           height: 800,
+          width: 1650,
 
           chartArea: {
             left: 80,
@@ -170,7 +172,7 @@ export class Statement2Component implements OnInit {
             alignment: "end"
           },
           seriesType: "bars",
-          colors: ["#c8001d", "#0000cf"],
+          colors: ["#95D1F5", "#00A1E0"],
           fontName: "Times New Roman",
           fontSize: 13,
 

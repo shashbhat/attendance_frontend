@@ -35,6 +35,7 @@
     "jquery-ui-dist": "^1.12.1",
     "jquery-ui-themes": "^1.12.0",
     "ng2-google-charts": "^5.0.0",
+    "ngx-spinner": "^8.1.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
