@@ -1,0 +1,11 @@
+th,
+td {
+    width: 150px;
+    text-align: center;
+    padding: 5px;
+    color: rgb(17, 70, 245)(23, 119, 82);
+}
+
+.search-bar{
+    margin: 1.5rem 0 1.5rem 0;
+}
