@@ -38,5 +38,16 @@ export class AnalyticsService {
   get_usn_by_email(email):Observable<any>{
     let url = `${this.baseUrl}studentUSNlogin/${email}`
     return this.http.get<any>(url)
+ 
   }
+  
+  // get_faculty_attendence_details(facultyName, term, academicYear):Observable<any>{
+  //   let url = `${this.baseUrl}studentAttendanceDetails/${facultyName}/${term}/${academicYear}`
+  //   return this.http.get<any>(url)
+  // }
+  getCourseAttendance(course,usn):Observable<any>{
+    let URL = `${this.baseUrl}getCourseAttendance/${course}/${usn}`   
+    return this.http.get(URL)
+
+   }
 }

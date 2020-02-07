@@ -7,6 +7,7 @@ import { Statement2Component } from './statement2/statement2.component';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 import { FormsModule } from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [AnalyticsComponent, Statement2Component],
@@ -15,7 +16,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     AnalyticsRoutingModule,
     Ng2GoogleChartsModule,
     FormsModule,
-    MatDialogModule      
+    MatDialogModule,
+    MatFormFieldModule     
   ]
 })
 export class AnalyticsModule { }

@@ -1,3 +1,24 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div class="jumbotron">
+                <h5 class="modal-title" id="exampleModalLabel"><b>University Exam Details</b></h5>
+            </div>
+            <h4><b>Course Name:</b></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5>Class Attended:{{present}} Class Taken:{{total}}UE:{{UE}}/100</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -16,13 +37,22 @@
             <button type="button" class="btn btn-default" (click) = "get_student_details()" >
                 <span class="glyphicon glyphicon-search"></span> Search
               </button>
-        </div>
     </div>
-    <div class="row">
+    <div *ngIf="columnChart">
+      <google-chart [data]="columnChart" (chartSelect)="onChartSelect($event)" data-toggle="modal" data-target="#exampleModal"></google-chart>
+  </div>
+</div>
+  <style>
+      th,
+      td {
+          width: 150px;
+          text-align: center;
+          padding: 5px;
+          color: rgb(17, 70, 245)(23, 119, 82);
+      }
+  </style>
 
-        <google-chart [data]="columnChart"></google-chart>
-<!-- 
-        <ol>
+        <!-- <ol>
             <li>
               <mat-form-field>
                 <input matInput [(ngModel)]="name" placeholder="What's your name?">
@@ -36,5 +66,64 @@
             </li>
           </ol> -->
 
+    <!-- </div>
+</div>
+
+
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div><i class="fa fa-line-chart" aria-hidden="true">Performance Analytics</i></div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div class="jumbotron">
+                <h5 class="modal-title" id="exampleModalLabel"><b>University Exam Details</b></h5>
+            </div>
+            <h4><b>Course Name:</b></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5>Class Attended:{{present}} Class Taken:{{total}}UE:{{UE}}/100</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="container">
+    <div class="row">
+        <tr>
+            <td>
+                Academic Year
+                <select [(ngModel)]="SelectedYear">
+                    <option>Select Year</option>
+                    <option *ngFor="let year of a">{{year}}</option>
+                </select>
+            </td>
+            <td>
+                Term
+                <select [(ngModel)]="SelectedSem">
+                    <option>Select Semester</option>
+                    <option *ngFor="let sem of semester">{{sem}}</option>
+                </select>
+            </td>
+            <td>
+                <button class="btn" (click)="search()">Search</button>
+            </td>
+        </tr>
+        <hr>
+    </div>
+    <div *ngIf="columnChart">
+        <google-chart [data]="columnChart" (chartSelect)="onChartSelect($event)" data-toggle="modal" data-target="#exampleModal"></google-chart>
     </div>
 </div>
+    <style>
+        th,
+        td {
+            width: 150px;
+            text-align: center;
+            padding: 5px;
+            color: #B03060(23, 119, 82);
+        }
+    </style> -->

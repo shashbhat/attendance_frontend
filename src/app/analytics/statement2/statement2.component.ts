@@ -3,6 +3,8 @@ import { AnalyticsService } from '../analytics.service';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { AuthService } from 'src/app/auth/auth.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ChartSelectEvent } from 'ng2-google-charts';
+
 
 
 @Component({
@@ -22,6 +24,13 @@ export class Statement2Component implements OnInit {
   usn:any;
   email:any;
   user:string[]=[];
+  facultyName:string[] = [];
+  UE;
+  title;
+  course;
+  courseAttendance:String[] = []
+  present;
+  total;
 
   charts : boolean = false;
 
@@ -115,25 +124,71 @@ export class Statement2Component implements OnInit {
     }, 5000 )
   }
 
+  onChartSelect(event:ChartSelectEvent){
+    this.UE = event.selectedRowFormattedValues[2]
+   this.course = event.selectedRowFormattedValues[0]
+   console.log(this.UE)
+   console.log(this.course)
+   this.analyticsService.getCourseAttendance(this.course,this.usn).subscribe(res=>{
+     this.courseAttendance = res["res"]
+   })
+   this.present = this.courseAttendance["present"]
+   this.total = this.courseAttendance["total"]
+ }
+ showStudentDetailsChart(data){
+  this.title = 'Course-wise Attendance %',
+  this.columnChart={
+    chartType:"ColumnChart",
+    dataTable:data,
+    options: {
+      bar: { groupWidth: "30%" },
+      vAxis: {
+        title: "Percentage",
+      },
 
-  showStudentDetailsChart(data){
-    
-    this.columnChart = {
-      chartType: 'ColumnChart',
-      dataTable: data,
-      options:{
-        'width': 1300,
-        'height': 1000
-      }
-    };
-  }
+      height: 800,
+     
+      chartArea: {
+        left: 80,
+        right: 100,
+        top: 100,
+      },
+      legend: {
+        position: "top",
+        alignment: "end"
+      },
+      seriesType: "bars",
+      colors: ["#c8001d", "#0000cf"],
+      fontName: "Times New Roman",
+      fontSize: 13,
 
-  // openDialog(): void {
-  //   const dialogRef = this.dialog.open(AddCustomerComponent,{
-  //     width: '640px',disableClose: true 
-  //   });
+    }
 
 
+// showStudentDetailsChart(data){
+  
+//   this.columnChart = {
+//     chartType: 'ColumnChart',
+//     dataTable: data,
+//     options:{
+//       'width': 1300,
+//       'height': 1000,
+//       hAxis:{
+//         textStyle:{
+//           fontSize:10
+//         }
+//       }
+//     }
+//   };
+// }
+  // get_faculty_attendance_details(facultyName, term, academicYear){
+  //   this.analyticsService.get_student_attendance_details(facultyName, term, academicYear).subscribe(res=>{
+  //     this.facultyAttendanceDetails = res["res"]
+  //   }
+  
+  
+
+ 
   // onChartSelect(event){
   //   console.log('selected')
   //   }
@@ -141,5 +196,6 @@ export class Statement2Component implements OnInit {
 
 
 
-
+  }
+}
 }
