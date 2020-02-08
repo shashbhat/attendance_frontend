@@ -46,8 +46,13 @@ export class AnalyticsService {
   //   return this.http.get<any>(url)
   // }
   getCourseAttendance(course,usn):Observable<any>{
-    let URL = `${this.baseUrl}getCourseAttendance/${course}/${usn}`   
-    return this.http.get(URL)
+    let url = `${this.baseUrl}getCourseAttendance/${course}/${usn}`   
+    return this.http.get<any>(url)
 
    }
+
+  get_student_avgMarks_faculty():Observable<any>{
+    let url = `${this.baseUrl}facultyMarksDetails/`
+    return this.http.get<any>(url)
+  }
 }

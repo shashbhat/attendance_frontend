@@ -25,6 +25,9 @@ export class Statement2Component implements OnInit {
 
   // Faculty vars
   facultyName: string[] = [];
+  avgMarksFaculty
+  courseCode
+  usnList: string[] = []
 
   // Chart vars
   UE;
@@ -33,8 +36,13 @@ export class Statement2Component implements OnInit {
   courseAttendance: String[] = []
   present;
   total;
-  charts: boolean = false;
+
   showSpinner = false;
+  chart_visibility: boolean = false;
+
+  // Error handling
+  error_flag
+  error_message
   
   selectedYear;
   selectedTerm;
@@ -48,13 +56,16 @@ export class Statement2Component implements OnInit {
     this.get_term_details()
     this.get_usn_by_email()
 
+    this.get_student_avgMarks_faculty()
+
   }
 
   get_student_details() {
-    
+
+    this.error_flag = false;
+    this.chart_visibility = false;
     this.showSpinner = true;
-  
-    if (!this.charts) {
+    if (!this.chart_visibility) {
       setTimeout(() => {
         this.showColumnChart()
       }, 2000)
@@ -63,6 +74,8 @@ export class Statement2Component implements OnInit {
     this.get_student_UEmarks_details(this.usn[0]["usn"], this.selectedTerm, this.selectedYear)
 
   }
+
+//login
 
   get_usn_by_email() {
 
@@ -87,6 +100,8 @@ export class Statement2Component implements OnInit {
     })
   }
 
+  //student 
+
   get_student_attendance_details(usn, term, academicYear) {
     this.analyticsService.get_student_attendance_details(usn, term, academicYear).subscribe(res => {
       this.studentAttendanceDetails = res["res"]
@@ -107,11 +122,23 @@ export class Statement2Component implements OnInit {
     })
   }
 
+  // Faculty
+
+  get_student_avgMarks_faculty(){
+    this.courseCode = "15ME53"
+    this.usnList = ["4MT15ME008","4MT15ME013"]
+      this.analyticsService.get_student_avgMarks_faculty().subscribe(res =>{
+        this.avgMarksFaculty = res["res"]
+        console.log(res)
+      })
+  }
+
+// chart
 
   showColumnChart() {
     
     let data = []
-    this.charts = true;
+  
     data.push(["CourseName", "Attendance", "Marks"]);
 
     setTimeout(() => {
@@ -128,7 +155,18 @@ export class Statement2Component implements OnInit {
         i++;
       }
 
-      this.showStudentDetailsChart(data)
+      if (data.length > 1) {
+        this.chart_visibility = true
+        this.error_flag = false
+        this.showStudentDetailsChart(data)
+      }
+      else {
+
+        this.error_flag = true
+        this.error_message = "Data does not exist for the entered criteria"
+      }
+
+      
 
 
     }, 3000)
@@ -147,6 +185,7 @@ export class Statement2Component implements OnInit {
     }, 2000)
 
   }
+
 
   showStudentDetailsChart(data) {
     this.chartTitle = 'Course-wise Attendance %',
@@ -172,21 +211,23 @@ export class Statement2Component implements OnInit {
             alignment: "end"
           },
           seriesType: "bars",
-          colors: ["#95D1F5", "#00A1E0"],
+          colors: ["#d3ad5d", "#789d96"],
           fontName: "Times New Roman",
           fontSize: 13,
 
         }
 
-        // get_faculty_attendance_details(facultyName, term, academicYear){
+      } 
+
+    }
+
+
+    
+  }
+     
+
+
+ // get_faculty_attendance_details(facultyName, term, academicYear){
         //   this.analyticsService.get_student_attendance_details(facultyName, term, academicYear).subscribe(res=>{
         //     this.facultyAttendanceDetails = res["res"]
         //   }
-
-
-
-
-
-      }
-  }
-}

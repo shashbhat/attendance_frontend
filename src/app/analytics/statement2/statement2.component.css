@@ -19,3 +19,15 @@ td {
     margin-left: -50px;
     margin-top: -50px;
 }
+
+.error-message{
+    font-size: 3rem;
+    position: absolute;
+    
+    top: 50%;
+    left: 40%;
+ 
+
+    margin-left: -50px;
+    margin-top: -50px;
+}

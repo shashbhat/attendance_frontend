@@ -23,7 +23,6 @@ export class CommonHeaderComponent implements OnInit {
     
     this.user = this.authService.getUserInfo();
     console.log("User infor"+this.user['user']);
-    
    
   }
 
