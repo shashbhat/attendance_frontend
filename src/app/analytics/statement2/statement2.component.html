@@ -18,20 +18,66 @@
     </button>
   </div>
 
-</div>
 
-
-<div class="row">
 
   <!-- Spinner -->
   <mat-spinner class="spinner" *ngIf="showSpinner === true"></mat-spinner>
-  
+
   <div *ngIf="error_flag">
     <p class="error-message">{{error_message}}</p>
   </div>
 
+  <div *ngIf="roles == student || roles == faculty">
 
-  <div class="col-md-8">
+
+    <div class="col-md-8">
+
+      <div *ngIf="chart_visibility">
+
+        <google-chart [data]="columnChart" (chartSelect)="onChartSelect($event)" data-toggle="modal"
+          data-target="#exampleModal"></google-chart>
+
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+
+<!-- Hod -->
+<div class="row search-bar mt-3" *ngIf="roles==hod">
+
+  <div class="col-md-3">
+    <select class="form-control" [(ngModel)]="selectedYear">
+      <option value="">-- Select Year --</option>
+      <option *ngFor="let year of academicYear">{{year}}</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select class="form-control" [(ngModel)]="selectedTerm">
+      <option value="">-- Select Semester --</option>
+      <option *ngFor="let term of termDetails">{{term}}</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <button type="button" class="btn btn-default" (click)="get_user_role_type()">
+      <span class="glyphicon glyphicon-search"></span> Search
+    </button>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-2" *ngIf="hod_display_names">
+    <div class="text-left">
+      <button class="btn btn-light btn-block text-left" *ngFor="let faculty of facultyNames"
+        (click)="get_hod_details($event.target.value)" value="{{faculty['employeeGivenId']}}">{{faculty['name']}}
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-10">
 
     <div *ngIf="chart_visibility">
 
@@ -42,6 +88,9 @@
   </div>
 
 </div>
+
+
+
 
 
 <!-- Modal -->

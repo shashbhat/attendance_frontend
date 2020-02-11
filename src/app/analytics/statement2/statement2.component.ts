@@ -48,6 +48,7 @@ export class Statement2Component implements OnInit {
   showSpinner = false;
   chart_visibility: boolean = false;
 
+  hod_display_names: boolean = false;
 
   // Error handling
   error_flag
@@ -63,36 +64,47 @@ export class Statement2Component implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUserInfo()
-    console.log(this.user)
-    this.roles = ""
-
-    console.log(this.user['roles'])
-    for (let i = 0; i < this.user['roles'].length; i++) {
-
-      if (this.user['roles'][i] == "FACULTY") {
-        this.roles = "faculty"
-        console.log('faculty')
-      }
-      else if(this.user['roles'].includes('STUDENT')){
-        this.roles = "student"
-      }
-
-      else if(this.user['roles'][2] == "HOD") {
-        this.roles = "hod"
-        let patt = new RegExp("[a-zA-z]*");
-        let res = patt.exec(this.eid);
-        this.deptName =res[0];
-        this.analyticsService.get_dept_faculty(this.deptName).subscribe(res => {
-          this.facultyNames = res['res']
-        })
-        }
-    }
-
-
+    
+    
     this.get_academic_year()
     this.get_term_details()
     this.get_usn_by_email()
     this.get_eid_by_email()
+
+    this.roles = ""
+    setTimeout(()=>{
+      for (let i = 0; i < this.user['roles'].length; i++) {
+
+        if (this.user['roles'][i] == "FACULTY") {
+          this.roles = "faculty"
+          console.log('faculty')
+  
+        }
+  
+        else if(this.user['roles'][i] == 'STUDENT'){
+          this.roles = "student"
+        }
+  
+        if(this.user['roles'][i] == "HOD") {
+          this.roles = "hod"
+  
+          let patt = new RegExp("[a-zA-z]*");
+          let res = patt.exec(this.eid);
+          this.deptName =res[0];
+          console.log(this.eid)
+          console.log('hello')
+          
+          this.analyticsService.get_dept_faculty(this.deptName).subscribe(res => {
+            this.facultyNames = res['res']
+            console.log(res)
+            console.log(this.facultyNames)
+          })
+          }
+      }
+    }, 1000)
+    
+
+
   }
 
 
@@ -101,11 +113,12 @@ export class Statement2Component implements OnInit {
       this.get_student_details()
     }
     else if (this.roles == "faculty") {
-      this.get_faculty_details()
+      this.get_faculty_details(this.selectedTerm, this.selectedYear, this.eid)
     }
-    else if( this.roles == 'hod'){
-      this.get_hod_details()
+    else if(this.roles == 'hod'){
+      this.hod_display_names = true;
     }
+  
   }
 
 
@@ -124,7 +137,7 @@ export class Statement2Component implements OnInit {
 
   }
 
-  get_faculty_details() {
+  get_faculty_details(term, academicYear, eid) {
     this.error_flag = false;
     this.chart_visibility = false;
     this.showSpinner = true;
@@ -134,13 +147,13 @@ export class Statement2Component implements OnInit {
         this.showFacultyColumnChart()
       }, 2000)
     }
-    this.get_student_avgAttendance_faculty(this.selectedTerm, this.selectedYear, this.eid)
-    this.get_student_avgMarks_faculty(this.selectedTerm, this.selectedYear, this.eid)
+    this.get_student_avgAttendance_faculty(term, academicYear, eid)
+    this.get_student_avgMarks_faculty(term, academicYear, eid)
   }
 
-
-  get_hod_details(){
-    
+  get_hod_details(eid){
+   
+    this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
   }
 
   //login
@@ -153,6 +166,7 @@ export class Statement2Component implements OnInit {
   }
 
   get_eid_by_email() {
+
     this.analyticsService.get_eid_by_email(this.user['user']).subscribe(res => {
       this.eid = res['res'][0]['employeeGivenId']
       
@@ -271,32 +285,41 @@ export class Statement2Component implements OnInit {
     data.push(["CourseName", "Attendance", "Marks"]);
 
     setTimeout(() => {
-      this.showSpinner = false
-      console.log(this.avgAttendanceDetails)
-      for (let s of this.avgAttendanceDetails) {
+      try{
 
-        data.push([s["course"], s['Avg']])
-      }
-      let i = 1
-      console.log(this.avgMarksFaculty)
-      for (let s of this.avgMarksFaculty) {
+        this.showSpinner = false
 
-        data[i][2] = s['avg']
-        i++;
-      }
-
-      if (data.length > 1) {
-        this.chart_visibility = true
-        this.error_flag = false
-        this.showStudentDetailsChart(data)
-      }
-      else {
-
+      
+        for (let s of this.avgAttendanceDetails) {
+  
+          data.push([s["course"], s['Avg']])
+        }
+        let i = 1
+     
+        for (let s of this.avgMarksFaculty) {
+  
+          data[i][2] = s['avg']
+          i++;
+        }
+  
+        if (data.length > 1) {
+          this.chart_visibility = true
+          this.error_flag = false
+          this.showStudentDetailsChart(data)
+        }
+        else {
+  
+          this.error_flag = true
+          this.error_message = "Data does not exist for the entered criteria"
+        }
+  
+  
+      } catch(e){
+       
         this.error_flag = true
         this.error_message = "Data does not exist for the entered criteria"
       }
-
-
+      
     }, 3000)
   }
 
