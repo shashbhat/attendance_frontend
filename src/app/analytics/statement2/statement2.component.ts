@@ -36,6 +36,11 @@ export class Statement2Component implements OnInit {
   set_role: any = "STUDENT"
   user_info: any;
   deptName
+  totalMarks
+  totalAttendance
+  totalClassTaken
+
+  user_roles
 
   // Chart vars
   UE;
@@ -47,9 +52,9 @@ export class Statement2Component implements OnInit {
 
   showSpinner = false;
   chart_visibility: boolean = false;
-
+  selectedDept
   hod_display_names: boolean = false;
-
+  principal_display_names: boolean = false;
   // Error handling
   error_flag
   error_message
@@ -64,49 +69,53 @@ export class Statement2Component implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUserInfo()
-    
-    
-    this.get_academic_year()
-    this.get_term_details()
+
+
+
     this.get_usn_by_email()
     this.get_eid_by_email()
-
+    this.user_roles = this.user['roles']
+    console.log(this.user_roles)
     this.roles = ""
-    setTimeout(()=>{
+    setTimeout(() => {
       for (let i = 0; i < this.user['roles'].length; i++) {
 
         if (this.user['roles'][i] == "FACULTY") {
           this.roles = "faculty"
-          console.log('faculty')
-  
+
         }
-  
-        else if(this.user['roles'][i] == 'STUDENT'){
+
+        else if (this.user['roles'][i] == 'STUDENT') {
           this.roles = "student"
         }
-  
-        if(this.user['roles'][i] == "HOD") {
+
+        if (this.user['roles'][i] == "HOD") {
           this.roles = "hod"
-  
+
           let patt = new RegExp("[a-zA-z]*");
           let res = patt.exec(this.eid);
-          this.deptName =res[0];
-          console.log(this.eid)
-          console.log('hello')
-          
+          this.deptName = res[0];
+        
           this.analyticsService.get_dept_faculty(this.deptName).subscribe(res => {
             this.facultyNames = res['res']
-            console.log(res)
-            console.log(this.facultyNames)
+      
           })
-          }
+        }
+
+        if (this.user['roles'][i] == "PRINCIPAL") {
+          this.get_principal_dept_names()
+          this.roles = "principal"
+
+
+        }
       }
+      
+
     }, 1000)
     
-
-
+    this.get_academic_year()
+    this.get_term_details()
   }
-
 
   get_user_role_type() {
     if (this.roles == "student") {
@@ -115,12 +124,15 @@ export class Statement2Component implements OnInit {
     else if (this.roles == "faculty") {
       this.get_faculty_details(this.selectedTerm, this.selectedYear, this.eid)
     }
-    else if(this.roles == 'hod'){
+    else if (this.roles == 'hod') {
       this.hod_display_names = true;
     }
-  
-  }
+    else if(this.roles == "principal"){
+      this.principal_display_names = true;
+      console.log('hello')
+    }
 
+  }
 
   get_student_details() {
 
@@ -141,7 +153,8 @@ export class Statement2Component implements OnInit {
     this.error_flag = false;
     this.chart_visibility = false;
     this.showSpinner = true;
- 
+    console.log('hello')
+
     if (!this.chart_visibility) {
       setTimeout(() => {
         this.showFacultyColumnChart()
@@ -149,13 +162,35 @@ export class Statement2Component implements OnInit {
     }
     this.get_student_avgAttendance_faculty(term, academicYear, eid)
     this.get_student_avgMarks_faculty(term, academicYear, eid)
+    this.get_total_class_taken(eid, this.course)
   }
 
-  get_hod_details(eid){
-   
+  get_hod_details(eid) {
+
     this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
   }
 
+  get_principal_dept_names(){
+    this.analyticsService.get_dept_names().subscribe(res => {
+      this.deptName = res['res']
+
+    })
+  }
+
+  get_principal_details(eid) {
+    console.log('princi')
+    this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
+
+  }
+
+  get_principal_faculty_names(deptName){
+    this.principal_display_names = true;
+    this.analyticsService.get_dept_faculty(this.selectedDept).subscribe(res => {
+      this.facultyNames = res['res']
+      
+
+    })
+  }
   //login
 
   get_usn_by_email() {
@@ -169,7 +204,7 @@ export class Statement2Component implements OnInit {
 
     this.analyticsService.get_eid_by_email(this.user['user']).subscribe(res => {
       this.eid = res['res'][0]['employeeGivenId']
-      
+
     })
   }
 
@@ -187,7 +222,7 @@ export class Statement2Component implements OnInit {
     })
   }
 
-  
+
 
   //student 
 
@@ -223,6 +258,13 @@ export class Statement2Component implements OnInit {
   get_student_avgMarks_faculty(term, academicYear, eid) {
     this.analyticsService.get_student_avgMarks_faculty(term, academicYear, eid).subscribe(res => {
       this.avgAttendanceDetails = res["res"]
+    })
+  }
+  
+  get_total_class_taken(eid, courseCode){
+    this.analyticsService.get_total_class_taken(eid, courseCode).subscribe(res=>{
+      this.totalClassTaken = res['res']
+      console.log(this.totalClassTaken)
     })
   }
 
@@ -279,48 +321,61 @@ export class Statement2Component implements OnInit {
   }
 
   // Faculty Chart
-  showFacultyColumnChart(){
+  showFacultyColumnChart() {
     let data = []
 
     data.push(["CourseName", "Attendance", "Marks"]);
 
     setTimeout(() => {
-      try{
+      try {
 
         this.showSpinner = false
 
-      
+
         for (let s of this.avgAttendanceDetails) {
-  
+
           data.push([s["course"], s['Avg']])
         }
         let i = 1
-     
+
         for (let s of this.avgMarksFaculty) {
-  
+
           data[i][2] = s['avg']
           i++;
         }
-  
+
         if (data.length > 1) {
           this.chart_visibility = true
           this.error_flag = false
           this.showStudentDetailsChart(data)
         }
         else {
-  
+
           this.error_flag = true
           this.error_message = "Data does not exist for the entered criteria"
         }
-  
-  
-      } catch(e){
-       
+
+
+      } catch (e) {
+
         this.error_flag = true
         this.error_message = "Data does not exist for the entered criteria"
       }
-      
+
     }, 3000)
+  }
+
+
+  onFacultyChartSelect(event: ChartSelectEvent) {
+    this.UE = event.selectedRowFormattedValues[2]
+    this.course = event.selectedRowFormattedValues[0]
+
+    setTimeout(() => {
+    
+      this.totalAttendance = this.avgAttendanceDetails["Avg"]
+      this.totalMarks = this.avgMarksFaculty["avg"]
+    }, 2000)
+
   }
 
   showStudentDetailsChart(data) {
@@ -329,13 +384,20 @@ export class Statement2Component implements OnInit {
         chartType: "ColumnChart",
         dataTable: data,
         options: {
-          bar: { groupWidth: "30%" },
+          bar: { groupWidth: "20%" },
           vAxis: {
             title: "Percentage",
+            scaleType: 'linear',
+            minValue: 0,
+            maxValue: 100
           },
-
-          height: 800,
-          width: 1650,
+          height: 600,
+          width: 1000,
+          hAxis: {
+            title: "Courses",
+            titleTextStyle: {
+            }
+          },
 
           chartArea: {
             left: 80,

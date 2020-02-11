@@ -42,21 +42,11 @@ export class AnalyticsService {
  
   }
   
-
   getCourseAttendance(course,usn):Observable<any>{
     let url = `${this.baseUrl}getCourseAttendance/${course}/${usn}`   
     return this.http.get<any>(url)
 
    }
-//faculty
-
-
-  //  get_Faculties(dept):Observable<any>{
-  //   let url = `${this.baseUrl}facultylogin/${dept}`
-  //   return this.http.get<any>(url)
-  //  }
-
- 
 
   get_student_avgMarks_faculty(term, academicYear, eid):Observable<any>{
     let url = `${this.baseUrl}facultyMarksDetails/${term}/${academicYear}/${eid}`
@@ -75,11 +65,21 @@ export class AnalyticsService {
 
   get_dept_faculty(deptName):Observable<any>{
     let URL = `${this.baseUrl}getDeptFaculty/${deptName}`   
-    return this.http.get(URL)
+    return this.http.get<any>(URL)
    }
 
    getFacultyName(deptId):Observable<any>{
     let URL = `${this.baseUrl}getFacultyNameByDeptId/${deptId}`   
-    return this.http.get(URL)
+    return this.http.get<any>(URL)
+   }
+
+   get_dept_names():Observable<any>{
+    let url = `${this.baseUrl}getDeptNames`
+    return this.http.get<any>(url)
+   }
+
+   get_total_class_taken(eid, courseName):Observable<any>{
+     let url = `${this.baseUrl}getTotalClassTaken/${eid}/${courseName}`
+     return this.http.get<any>(url)
    }
 }
