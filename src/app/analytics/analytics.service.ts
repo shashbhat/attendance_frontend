@@ -82,4 +82,11 @@ export class AnalyticsService {
      let url = `${this.baseUrl}getTotalClassTaken/${eid}/${courseName}`
      return this.http.get<any>(url)
    }
+
+   get_user_name_by_email(email):Observable<any>{
+    let url = `${this.baseUrl}getUserNameEmail/${email}`
+    return this.http.get<any>(url)
+  }
+
+   
 }

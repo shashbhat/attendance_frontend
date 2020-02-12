@@ -1,3 +1,4 @@
+
 th,
 td {
     width: 150px;
@@ -31,3 +32,51 @@ td {
     margin-left: -50px;
     margin-top: -50px;
 }
+
+
+.button {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #008CBA;
+  }
+  
+  .button:hover {
+    background-color: #008CBA;
+    color: white;
+  }
+
+  .charts{
+      height: 100vh;
+  }
+
+  hr{
+      margin-top: 0.5rem;
+    border: 1px solid #adaaaa;
+  }
+
+  .v1{
+    border-left: 2px solid #adaaaa;
+    height: 80vh;
+    padding-left: 2.4rem;
+  }
+
+
+
+#facultyName{
+      text-align: left;
+      font-size: 1.5rem;
+      font-weight: bold;
+  }
+
+  #facultyID{
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding-left: 20px;
+     
+  }
+#courseTitle{
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 4rem;
+  }
+

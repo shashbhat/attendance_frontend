@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonHeaderService } from './common-header.service';
 import { AppComponent } from '../app.component';
 import { AuthService } from '../auth/auth.service';
+import { Observable } from 'rxjs';
+import { AnalyticsService } from '../analytics/analytics.service';
 declare var $:any;
 @Component({
   selector: 'app-common-header',
@@ -15,21 +17,28 @@ export class CommonHeaderComponent implements OnInit {
   tenantName: string;
   user;
   anotherRole = false;
-  constructor(public commonHeaderService: CommonHeaderService, private appComponent: AppComponent,private authService:AuthService) { }
+  userName
+  constructor(public commonHeaderService: CommonHeaderService, private appComponent: AppComponent,private authService:AuthService, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.authService.tanentDetails.subscribe(name => this.tenantName = name);
-
-    
     this.user = this.authService.getUserInfo();
-    console.log("User infor"+this.user['user']);
-   
+    this.get_name_by_email(this.user['user'])
+    
   }
 
   logOut(){
     this.authService.logout();
     this.tenantName = "";
   }
+
+  get_name_by_email(email){
+    this.analyticsService.get_user_name_by_email(email).subscribe(res=>{
+      this.userName = res['name']
+      console.log(this.userName)
+    })
+  }
+
 
   changeRole(role: string) {
 

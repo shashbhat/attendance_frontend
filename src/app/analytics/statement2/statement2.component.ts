@@ -3,7 +3,6 @@ import { AnalyticsService } from '../analytics.service';
 import { GoogleChartInterface } from 'ng2-google-charts/google-charts-interfaces';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ChartSelectEvent } from 'ng2-google-charts';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-statement2',
@@ -14,6 +13,7 @@ export class Statement2Component implements OnInit {
 
   public columnChart: GoogleChartInterface;
 
+  userName
   // Student vars
   academicYear: string[] = [];
   term: string[] = [];
@@ -69,13 +69,10 @@ export class Statement2Component implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUserInfo()
-
-
-
     this.get_usn_by_email()
     this.get_eid_by_email()
     this.user_roles = this.user['roles']
-    console.log(this.user_roles)
+  
     this.roles = ""
     setTimeout(() => {
       for (let i = 0; i < this.user['roles'].length; i++) {
@@ -95,24 +92,22 @@ export class Statement2Component implements OnInit {
           let patt = new RegExp("[a-zA-z]*");
           let res = patt.exec(this.eid);
           this.deptName = res[0];
-        
+
           this.analyticsService.get_dept_faculty(this.deptName).subscribe(res => {
             this.facultyNames = res['res']
-      
+
           })
         }
 
         if (this.user['roles'][i] == "PRINCIPAL") {
           this.get_principal_dept_names()
           this.roles = "principal"
-
-
         }
       }
-      
+
 
     }, 1000)
-    
+
     this.get_academic_year()
     this.get_term_details()
   }
@@ -127,9 +122,9 @@ export class Statement2Component implements OnInit {
     else if (this.roles == 'hod') {
       this.hod_display_names = true;
     }
-    else if(this.roles == "principal"){
+    else if (this.roles == "principal") {
       this.principal_display_names = true;
-      console.log('hello')
+
     }
 
   }
@@ -146,14 +141,13 @@ export class Statement2Component implements OnInit {
     }
     this.get_student_attendance_details(this.usn[0]["usn"], this.selectedTerm, this.selectedYear)
     this.get_student_UEmarks_details(this.usn[0]["usn"], this.selectedTerm, this.selectedYear)
-
   }
 
   get_faculty_details(term, academicYear, eid) {
     this.error_flag = false;
     this.chart_visibility = false;
     this.showSpinner = true;
-    console.log('hello')
+    this.eid = eid
 
     if (!this.chart_visibility) {
       setTimeout(() => {
@@ -162,32 +156,34 @@ export class Statement2Component implements OnInit {
     }
     this.get_student_avgAttendance_faculty(term, academicYear, eid)
     this.get_student_avgMarks_faculty(term, academicYear, eid)
-    this.get_total_class_taken(eid, this.course)
+
   }
 
-  get_hod_details(eid) {
-
+  get_hod_details(eid, facultyName) {
+    this.facultyName = facultyName['name']
+    console.log(this.facultyName)
+    console.log('hello')
     this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
   }
 
-  get_principal_dept_names(){
+  get_principal_dept_names() {
     this.analyticsService.get_dept_names().subscribe(res => {
       this.deptName = res['res']
-
     })
   }
 
-  get_principal_details(eid) {
-    console.log('princi')
+  get_principal_details(eid, facultyName) {
+    this.facultyName = facultyName
     this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
+    console.log(this.facultyName)
+    console.log('hello')
 
   }
 
-  get_principal_faculty_names(deptName){
+  get_principal_faculty_names(deptName) {
     this.principal_display_names = true;
     this.analyticsService.get_dept_faculty(this.selectedDept).subscribe(res => {
       this.facultyNames = res['res']
-      
 
     })
   }
@@ -208,7 +204,6 @@ export class Statement2Component implements OnInit {
     })
   }
 
-
   get_academic_year() {
     this.analyticsService.get_academic_year().subscribe(res => {
       this.academicYear = res["res"]
@@ -221,8 +216,6 @@ export class Statement2Component implements OnInit {
 
     })
   }
-
-
 
   //student 
 
@@ -242,13 +235,14 @@ export class Statement2Component implements OnInit {
   get_student_total_attendance() {
     this.analyticsService.getCourseAttendance(this.course, this.usn[0]['usn']).subscribe(res => {
       this.courseAttendance = res["res"]
-      console.log(res)
+
     })
   }
 
 
   // Faculty
   get_student_avgAttendance_faculty(term, academicYear, eid) {
+
     this.analyticsService.get_student_avgAttendance_faculty(term, academicYear, eid).subscribe(res => {
       this.avgMarksFaculty = res["res"]
 
@@ -258,13 +252,16 @@ export class Statement2Component implements OnInit {
   get_student_avgMarks_faculty(term, academicYear, eid) {
     this.analyticsService.get_student_avgMarks_faculty(term, academicYear, eid).subscribe(res => {
       this.avgAttendanceDetails = res["res"]
+
     })
   }
-  
-  get_total_class_taken(eid, courseCode){
-    this.analyticsService.get_total_class_taken(eid, courseCode).subscribe(res=>{
+
+  get_total_class_taken(eid, courseCode) {
+
+
+    this.analyticsService.get_total_class_taken(eid, courseCode).subscribe(res => {
       this.totalClassTaken = res['res']
-      console.log(this.totalClassTaken)
+
     })
   }
 
@@ -347,7 +344,7 @@ export class Statement2Component implements OnInit {
         if (data.length > 1) {
           this.chart_visibility = true
           this.error_flag = false
-          this.showStudentDetailsChart(data)
+          this.showFacultyDetailsChart(data)
         }
         else {
 
@@ -371,14 +368,56 @@ export class Statement2Component implements OnInit {
     this.course = event.selectedRowFormattedValues[0]
 
     setTimeout(() => {
-    
+      this.get_total_class_taken(this.eid, this.course)
       this.totalAttendance = this.avgAttendanceDetails["Avg"]
       this.totalMarks = this.avgMarksFaculty["avg"]
-    }, 2000)
+    }, 1000)
 
   }
 
   showStudentDetailsChart(data) {
+    this.chartTitle = 'Course-wise Attendance %',
+      this.columnChart = {
+        chartType: "ColumnChart",
+        dataTable: data,
+        options: {
+          bar: { groupWidth: "20%" },
+          vAxis: {
+            title: "Percentage",
+            scaleType: 'linear',
+            minValue: 0,
+            maxValue: 100
+          },
+          height: 800,
+          width: 1600,
+          hAxis: {
+            title: "Courses",
+            titleTextStyle: {
+            }
+          },
+
+          chartArea: {
+            left: 80,
+            right: 100,
+            top: 100,
+          },
+          legend: {
+            position: "top",
+            alignment: "end"
+          },
+          seriesType: "bars",
+          colors: ["#d3ad5d", "#789d96"],
+          fontName: "Times New Roman",
+          fontSize: 13,
+
+        }
+
+      }
+
+  }
+
+
+  showFacultyDetailsChart(data) {
     this.chartTitle = 'Course-wise Attendance %',
       this.columnChart = {
         chartType: "ColumnChart",
@@ -418,6 +457,7 @@ export class Statement2Component implements OnInit {
       }
 
   }
+
 
 
 

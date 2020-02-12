@@ -714,7 +714,7 @@ ss-multiselect-dropdown>.btn-group>.btn-default {
 .dropdown-menu>li>a {
     color: #00303f;
 }
-
+/* 
 @-moz-document url-prefix() {
     select.form-control {
         padding-right: 25px;
@@ -728,7 +728,7 @@ ss-multiselect-dropdown>.btn-group>.btn-default {
         -moz-appearance: none !important;
         appearance: none !important;
     }
-}
+} */
 
 .dropdown-menu>li>a {
     color: #00303f !important;
