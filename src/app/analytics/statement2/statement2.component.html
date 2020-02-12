@@ -1,67 +1,69 @@
 <div *ngIf="user_roles.includes('STUDENT')">
 
 
+  <div class="row search-bar mt-3">
 
-<div class="row search-bar mt-3" >
+    <div class="selectYear">
+      <select class="form-control" [(ngModel)]="selectedYear">
+        <option value="">-- Select Year --</option>
+        <option *ngFor="let year of academicYear">{{year}}</option>
+      </select>
+    </div>
 
-  <div class="col-md-4">
-    <select class="form-control" [(ngModel)]="selectedYear">
-      <option value="">-- Select Year --</option>
-      <option *ngFor="let year of academicYear">{{year}}</option>
-    </select>
-  </div>
-  <div class="col-md-4">
-    <select class="form-control" [(ngModel)]="selectedTerm">
-      <option value="">-- Select Semester --</option>
-      <option *ngFor="let term of termDetails">{{term}}</option>
-    </select>
-  </div>
-  <div class="col-md-4">
-    <button type="button" class="btn button btn-default" (click)="get_user_role_type()">
-      <span class="glyphicon glyphicon-search"></span> Search
-    </button>
+    <div class="selectSem">
+      <select class="form-control" [(ngModel)]="selectedTerm">
+        <option value="">-- Select Semester --</option>
+        <option *ngFor="let term of termDetails">{{term}}</option>
+      </select>
+    </div>
+
+    <div class="search">
+      <button type="button" class="btn button btn-default" (click)="get_user_role_type()">
+        <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+    </div>
 
   </div>
-</div>
   <hr>
 
   <div class="row charts">
-  
 
     <div class="col-md-12">
-
       <div *ngIf="chart_visibility">
 
+        <span class="courseTitle">
+          Course-Wise Attendance %
+        </span>
         <google-chart [data]="columnChart" (chartSelect)="onChartSelect($event)" data-toggle="modal"
           data-target="#exampleModal"></google-chart>
 
       </div>
     </div>
-   
-  </div>
 
+  </div>
 </div>
 
 <!-- Faculty -->
 <div
   *ngIf="user_roles.includes('FACULTY') && user_roles.includes('HOD') == false && user_roles.includes('PRINCIPAL') == false">
 
-
   <div class="row search-bar mt-3">
 
-    <div class="col-md-4">
+    <div class="selectYear">
       <select class="form-control" [(ngModel)]="selectedYear">
         <option value="">-- Select Year --</option>
         <option *ngFor="let year of academicYear">{{year}}</option>
       </select>
+
+      <div class="selectSem">
+        <select class="form-control" [(ngModel)]="selectedTerm">
+          <option value="">-- Select Semester --</option>
+          <option *ngFor="let term of termDetails">{{term}}</option>
+        </select>
+      </div>
     </div>
-    <div class="col-md-4">
-      <select class="form-control" [(ngModel)]="selectedTerm">
-        <option value="">-- Select Semester --</option>
-        <option *ngFor="let term of termDetails">{{term}}</option>
-      </select>
-    </div>
-    <div class="col-md-4">
+
+    <div class="search">
       <button type="button" class="btn button btn-default" (click)="get_user_role_type()">
         <span class="glyphicon glyphicon-search"></span> Search
       </button>
@@ -71,21 +73,19 @@
 
   <hr>
   <div class="row charts">
-    <div class="col-md-2">
 
-    </div>
     <div class="col-md-8">
 
       <div *ngIf="chart_visibility">
-
+        <span class="courseTitle">
+          Course-Wise Attendance %
+        </span>
         <google-chart [data]="columnChart" (chartSelect)="onFacultyChartSelect($event)" data-toggle="modal"
-          data-target="#exampleModal"></google-chart>
+          data-target="#facultyModal"></google-chart>
 
       </div>
     </div>
-    <div class="col-md-2">
 
-    </div>
   </div>
 
 </div>
@@ -96,30 +96,33 @@
 
   <div class="row search-bar mt-3">
 
-    <div class="col-md-4">
+
+    <div class="selectYear">
       <select class="form-control" [(ngModel)]="selectedYear">
         <option value="">-- Select Year --</option>
         <option *ngFor="let year of academicYear">{{year}}</option>
       </select>
     </div>
-    <div class="col-md-4">
+
+    <div class="selectSem">
       <select class="form-control" [(ngModel)]="selectedTerm">
         <option value="">-- Select Semester --</option>
         <option *ngFor="let term of termDetails">{{term}}</option>
       </select>
     </div>
-    <div class="col-md-4">
+
+
+    <div class="search">
       <button type="button" class="btn button btn-default" (click)="get_user_role_type()">
         <span class="glyphicon glyphicon-search"></span> Search
       </button>
     </div>
   </div>
-
   <hr>
 
   <div class="row charts">
 
-    <div class="col-md-2" *ngIf="hod_display_names">
+    <div class="col-md-2 facultyList" *ngIf="hod_display_names">
       <div class="text-left">
         <button class="btn button btn-light btn-block text-left" *ngFor="let faculty of facultyNames"
           (click)="get_hod_details($event.target.value, faculty)"
@@ -134,16 +137,18 @@
       <div *ngIf="chart_visibility">
         <div class="v1">
 
-            <span id="facultyName">
+          <div class="containFlex">
+            <span class="facultyName">
               Faculty: {{facultyName}}
             </span>
-            <span id="facultyID">
+            <span class="facultyID">
               Faculty Id: {{eid}}
             </span>
-            <span id="courseTitle">
+            <span class="courseTitle">
               Course-Wise Attendance %
             </span>
-        
+
+          </div>
           <google-chart [data]="columnChart" (chartSelect)="onFacultyChartSelect($event)" data-toggle="modal"
             data-target="#facultyModal"></google-chart>
 
@@ -158,39 +163,40 @@
 <!-- Principal -->
 <div *ngIf="user_roles.includes('PRINCIPAL')">
 
-
   <div class="row search-bar mt-3">
 
-    <div class="col-md-3">
+    <div class="selectYear">
       <select class="form-control" [(ngModel)]="selectedYear">
         <option value="">-- Select Year --</option>
         <option *ngFor="let year of academicYear">{{year}}</option>
       </select>
     </div>
-    <div class="col-md-3">
+
+    <div class="selectSem">
       <select class="form-control" [(ngModel)]="selectedTerm">
         <option value="">-- Select Semester --</option>
         <option *ngFor="let term of termDetails">{{term}}</option>
       </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="selectDept">
       <select class="form-control" [(ngModel)]="selectedDept">
         <option value="">-- Select Department --</option>
         <option *ngFor="let dept of deptName">{{dept}}</option>
       </select>
     </div>
 
-    <div class="col-md-3">
+    <div class="search">
       <button type="button" class="button btn btn-default" (click)="get_principal_faculty_names($event.target.value)">
         <span class="glyphicon glyphicon-search"></span> Search
       </button>
     </div>
-  </div>
 
+  </div>
+  <hr>
   <div class="row charts">
 
-    <div class="col-md-2" *ngIf="principal_display_names">
+    <div class="col-md-2 facultyList" *ngIf="principal_display_names">
       <div class="text-left">
         <button class="btn button btn-light btn-block text-left" *ngFor="let faculty of facultyNames"
           (click)="get_principal_details($event.target.value, faculty )"
@@ -204,15 +210,14 @@
       <div *ngIf="chart_visibility">
         <div class="v1">
 
-
-          <div class="mb-3">
-            <span id="facultyName">
+          <div class="containFlex">
+            <span class="facultyName">
               Faculty: {{facultyName}}
             </span>
-            <span id="facultyID">
+            <span class="facultyID">
               Faculty Id: {{eid}}
             </span>
-            <span id="courseTitle">
+            <span class="courseTitle">
               Course-Wise Attendance %
             </span>
           </div>
@@ -231,16 +236,16 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-     
-          <h4 class="modal-title-center"><b>Course Details</b></h4>
-          <div> <b>Course:</b>{{course}}</div>
-        
+
+        <h4 class="modal-title-center"><b>Course Details</b></h4>
+        <div> <b>Course:</b>{{course}}</div>
+
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="row">
-          
-          <div class="col-md-4"><B> Class Attended:</B>{{present}}</div>
+
+          <div class="col-md-4"><B>Class Attended:</B>{{present}}</div>
           <div class="col-md-4"><B>Class Taken:</B>{{total}}</div>
           <div class="col-md-4"><B>Average UE:</B>{{UE}}/100</div>
         </div>
@@ -268,7 +273,10 @@
 
       <div class="modal-body">
         <p><b>Course Name:{{course}}</b></p>
-        <p><b>Faculty:{{facultyName}}</b></p>
+
+        <div *ngIf="user_roles.includes('PRINCIPAL') || user_roles.includes('HOD')">
+          <p><b>Faculty:{{facultyName}}</b></p>
+        </div>
         <hr>
         <div class="row">
           <div class="col-md-3"><B>Class Taken:</B>{{totalClassTaken}}</div>

@@ -88,5 +88,4 @@ export class AnalyticsService {
     return this.http.get<any>(url)
   }
 
-   
 }

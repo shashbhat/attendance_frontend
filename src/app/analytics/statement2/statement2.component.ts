@@ -64,7 +64,6 @@ export class Statement2Component implements OnInit {
   Faculties: any;
 
 
-
   constructor(private analyticsService: AnalyticsService, private authService: AuthService) { }
 
   ngOnInit() {
@@ -104,8 +103,6 @@ export class Statement2Component implements OnInit {
           this.roles = "principal"
         }
       }
-
-
     }, 1000)
 
     this.get_academic_year()
@@ -431,7 +428,7 @@ export class Statement2Component implements OnInit {
             maxValue: 100
           },
           height: 600,
-          width: 1000,
+          width: 1200,
           hAxis: {
             title: "Courses",
             titleTextStyle: {
