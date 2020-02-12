@@ -173,7 +173,7 @@ export class Statement2Component implements OnInit {
   }
 
   get_principal_details(eid, facultyName) {
-    this.facultyName = facultyName
+    this.facultyName = facultyName['name']
     this.get_faculty_details(this.selectedTerm, this.selectedYear, eid)
     console.log(this.facultyName)
     console.log('hello')
