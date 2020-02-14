@@ -42,6 +42,10 @@ td {
     background-color: #008CBA;
     color: white;
   }
+  .button:active {
+    background-color: #008CBA;
+    color: white;
+  }
 
   .charts{
       height: 100vh;

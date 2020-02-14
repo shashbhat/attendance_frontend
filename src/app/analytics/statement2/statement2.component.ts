@@ -356,7 +356,7 @@ export class Statement2Component implements OnInit {
         this.error_message = "Data does not exist for the entered criteria"
       }
 
-    }, 3000)
+    }, 2000)
   }
 
 
